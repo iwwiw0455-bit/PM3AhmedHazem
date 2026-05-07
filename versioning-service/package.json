@@ -1,0 +1,41 @@
+{
+  "name": "versioning-service",
+  "version": "1.0.0",
+  "description": "Versioning microservice for the CSE474 distributed file storage platform",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "jest",
+    "test:coverage": "jest --coverage --coverageDirectory=tests/coverage",
+    "lint": "echo \"Lint skipped for this academic project\""
+  },
+  "keywords": [
+    "microservice",
+    "versioning",
+    "nodejs",
+    "express",
+    "kafka",
+    "postgresql"
+  ],
+  "author": "Ahmed",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.1",
+    "helmet": "^7.2.0",
+    "kafkajs": "^2.2.4",
+    "morgan": "^1.10.1",
+    "pg": "^8.20.0",
+    "prom-client": "^15.1.3",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.14",
+    "supertest": "^6.3.4"
+  }
+}

@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: versioning-service
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.versioning.replicas }}
+  selector:
+    matchLabels:
+      app: versioning-service
+  template:
+    metadata:
+      labels:
+        app: versioning-service
+    spec:
+      containers:
+        - name: versioning-service
+          image: {{ .Values.versioning.image }}
+          ports:
+            - containerPort: {{ .Values.versioning.port }}
+          resources:
+            requests:
+              cpu: {{ .Values.versioning.resources.requests.cpu }}
+              memory: {{ .Values.versioning.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.versioning.resources.limits.cpu }}
+              memory: {{ .Values.versioning.resources.limits.memory }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.versioning.port }}
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: {{ .Values.versioning.port }}

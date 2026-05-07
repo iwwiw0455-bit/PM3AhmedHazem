@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: versioning-service
+  namespace: cse474-prod
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: versioning-service
+  template:
+    metadata:
+      labels:
+        app: versioning-service
+    spec:
+      containers:
+        - name: versioning-service
+          image: ahmed5577/versioning-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: versioning-config
+            - secretRef:
+                name: versioning-secret
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 5

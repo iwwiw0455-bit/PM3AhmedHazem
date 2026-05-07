@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tagging-service
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.tagging.replicas }}
+  selector:
+    matchLabels:
+      app: tagging-service
+  template:
+    metadata:
+      labels:
+        app: tagging-service
+    spec:
+      containers:
+        - name: tagging-service
+          image: {{ .Values.tagging.image }}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: {{ .Values.tagging.port }}
+          resources:
+            requests:
+              cpu: {{ .Values.tagging.resources.requests.cpu }}
+              memory: {{ .Values.tagging.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.tagging.resources.limits.cpu }}
+              memory: {{ .Values.tagging.resources.limits.memory }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.tagging.port }}
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: {{ .Values.tagging.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 5

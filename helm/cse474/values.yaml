@@ -1,0 +1,25 @@
+namespace: cse474-prod
+
+versioning:
+  image: ahmed5577/versioning-service:latest
+  replicas: 2
+  port: 3000
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+tagging:
+  image: ahmed5577/tagging-service:latest
+  replicas: 2
+  port: 3000
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi

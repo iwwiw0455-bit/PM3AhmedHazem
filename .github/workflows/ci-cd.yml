@@ -1,0 +1,104 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  versioning:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Versioning dependencies
+        working-directory: versioning-service
+        run: npm install
+
+      - name: Lint Versioning
+        working-directory: versioning-service
+        run: npm run lint
+
+      - name: Test Versioning with coverage
+        working-directory: versioning-service
+        run: npm run test:coverage
+
+      - name: Build Versioning Docker image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/versioning-service:${{ github.sha }} ./versioning-service
+
+      - name: DockerHub login
+        if: github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Push Versioning Docker image
+        if: github.ref == 'refs/heads/main'
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/versioning-service:${{ github.sha }}
+
+  tagging:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Tagging dependencies
+        working-directory: tagging-service
+        run: npm install
+
+      - name: Lint Tagging
+        working-directory: tagging-service
+        run: npm run lint
+
+      - name: Test Tagging with coverage
+        working-directory: tagging-service
+        run: npm run test:coverage
+
+      - name: Build Tagging Docker image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/tagging-service:${{ github.sha }} ./tagging-service
+
+      - name: DockerHub login
+        if: github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Push Tagging Docker image
+        if: github.ref == 'refs/heads/main'
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/tagging-service:${{ github.sha }}
+
+  deploy:
+    needs: [versioning, tagging]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f k8s/namespace.yaml
+          kubectl apply -f k8s/versioning/
+          kubectl apply -f k8s/tagging/

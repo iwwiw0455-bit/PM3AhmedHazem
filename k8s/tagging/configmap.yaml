@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tagging-config
+  namespace: cse474-prod
+data:
+  NODE_ENV: "production"
+  PORT: "3000"
+  SERVICE_NAME: "tagging-service"
+  DB_HOST: "tagging-db"
+  DB_PORT: "5432"
+  DB_NAME: "tagging_db"
