@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: versioning-tagging-servicemonitor
+  namespace: default
+  labels:
+    release: monitoring
+spec:
+  namespaceSelector:
+    matchNames:
+      - cse474-prod
+  selector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values:
+          - versioning-service
+          - tagging-service
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s

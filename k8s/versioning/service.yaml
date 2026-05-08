@@ -7,6 +7,7 @@ spec:
   type: ClusterIP
   selector:
     app: versioning-service
-  ports:
-    - port: 3000
-      targetPort: 3000
+ports:
+  - name: http
+    port: 3000
+    targetPort: 3000
