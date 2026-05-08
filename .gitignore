@@ -1,22 +1,15 @@
-# Node dependencies
 node_modules/
 versioning-service/node_modules/
 tagging-service/node_modules/
 
-# Environment files
 .env
 versioning-service/.env
 tagging-service/.env
 
-# Test coverage
-tests/coverage/
-versioning-service/tests/coverage/
-tagging-service/tests/coverage/
+actions-runner/
 
-# OS files
 .DS_Store
 
-# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
