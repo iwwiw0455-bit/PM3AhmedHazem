@@ -29,4 +29,19 @@ router.get("/ready", (req, res) => {
   });
 });
 
+
+router.get("/trace-test", (req, res) => {
+  res.status(200).json({
+    success: true,
+    data: {
+      message: "Tagging trace test completed"
+    },
+    meta: {
+      service: process.env.SERVICE_NAME || "tagging-service",
+      request_id: req.requestId || null
+    }
+  });
+});
+
+
 module.exports = router;
