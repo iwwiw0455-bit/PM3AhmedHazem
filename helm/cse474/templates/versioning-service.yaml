@@ -3,11 +3,13 @@ kind: Service
 metadata:
   name: versioning-service
   namespace: {{ .Values.namespace }}
+  labels:
+    app: versioning-service
 spec:
   type: ClusterIP
   selector:
     app: versioning-service
-ports:
-  - name: http
-    port: {{ .Values.versioning.port }}
-    targetPort: {{ .Values.versioning.port }}
+  ports:
+    - name: http
+      port: {{ .Values.versioning.port }}
+      targetPort: {{ .Values.versioning.port }}

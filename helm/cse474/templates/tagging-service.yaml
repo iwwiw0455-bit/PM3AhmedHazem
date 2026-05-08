@@ -3,11 +3,13 @@ kind: Service
 metadata:
   name: tagging-service
   namespace: {{ .Values.namespace }}
+  labels:
+    app: tagging-service
 spec:
   type: ClusterIP
   selector:
     app: tagging-service
-ports:
-  - name: http
-    port: {{ .Values.tagging.port }}
-    targetPort: {{ .Values.tagging.port }}
+  ports:
+    - name: http
+      port: {{ .Values.tagging.port }}
+      targetPort: {{ .Values.tagging.port }}
