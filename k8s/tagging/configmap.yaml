@@ -10,3 +10,6 @@ data:
   DB_HOST: "tagging-db"
   DB_PORT: "5432"
   DB_NAME: "tagging_db"
+
+  SERVICE_NAME: "tagging-service"
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://jaeger.default.svc.cluster.local:4318/v1/traces"

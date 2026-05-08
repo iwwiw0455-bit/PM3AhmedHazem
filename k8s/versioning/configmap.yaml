@@ -10,4 +10,7 @@ data:
   DB_HOST: "versioning-db"
   DB_PORT: "5432"
   DB_NAME: "versioning_db"
-  KAFKA_BROKERS: "kafka:9092"
+  KAFKA_BROKERS: "kafka:9092"\
+
+  SERVICE_NAME: "versioning-service"
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://jaeger.default.svc.cluster.local:4318/v1/traces"
