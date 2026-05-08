@@ -82,23 +82,20 @@ jobs:
       - name: Push Tagging Docker image
         if: github.ref == 'refs/heads/main'
         run: docker push ${{ secrets.DOCKER_USERNAME }}/tagging-service:${{ github.sha }}
+deploy:
+  needs: [versioning, tagging]
+  if: github.ref == 'refs/heads/main'
+  runs-on: self-hosted
 
-  deploy:
-    needs: [versioning, tagging]
-    if: github.ref == 'refs/heads/main'
-    runs-on: self-hosted
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Configure kubeconfig
-        run: |
-          mkdir -p ~/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
-
-      - name: Deploy to Kubernetes
-        run: |
-          kubectl apply -f k8s/namespace.yaml
-          kubectl apply -f k8s/versioning/
-          kubectl apply -f k8s/tagging/
+    - name: Deploy with Helm to local Kubernetes
+      run: |
+        helm upgrade --install cse474 ./helm/cse474 -n cse474-prod --create-namespace
+        kubectl rollout restart deployment/versioning-service -n cse474-prod
+        kubectl rollout restart deployment/tagging-service -n cse474-prod
+        kubectl rollout status deployment/versioning-service -n cse474-prod
+        kubectl rollout status deployment/tagging-service -n cse474-prod
+        kubectl get pods -n cse474-prod
