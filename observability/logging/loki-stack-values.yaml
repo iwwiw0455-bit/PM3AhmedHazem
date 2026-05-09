@@ -1,0 +1,24 @@
+grafana:
+  enabled: false
+
+prometheus:
+  enabled: false
+
+loki:
+  enabled: true
+  persistence:
+    enabled: false
+
+promtail:
+  enabled: true
+  config:
+    clients:
+      - url: http://loki:3100/loki/api/v1/push
+
+loki:
+  enabled: true
+  image:
+    repository: grafana/loki
+    tag: 2.9.8
+  persistence:
+    enabled: false
