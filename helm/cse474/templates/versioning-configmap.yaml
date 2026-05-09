@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: versioning-config
+  namespace: {{ .Values.namespace }}
+data:
+  NODE_ENV: "production"
+  PORT: "{{ .Values.versioning.port }}"
+  SERVICE_NAME: "versioning-service"
+  DB_HOST: "versioning-db"
+  DB_PORT: "5432"
+  DB_NAME: "versioning_db"
+  DB_USER: "postgres"
+  KAFKA_BROKERS: "kafka:9092"
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://jaeger.default.svc.cluster.local:4318/v1/traces"

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tagging-config
+  namespace: {{ .Values.namespace }}
+data:
+  NODE_ENV: "production"
+  PORT: "{{ .Values.tagging.port }}"
+  SERVICE_NAME: "tagging-service"
+  DB_HOST: "tagging-db"
+  DB_PORT: "5432"
+  DB_NAME: "tagging_db"
+  DB_USER: "postgres"
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://jaeger.default.svc.cluster.local:4318/v1/traces"

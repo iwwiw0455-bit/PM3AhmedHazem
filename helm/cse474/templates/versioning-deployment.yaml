@@ -16,8 +16,16 @@ spec:
       containers:
         - name: versioning-service
           image: {{ .Values.versioning.image }}
+          imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.versioning.port }}
+
+          envFrom:
+            - configMapRef:
+                name: versioning-config
+            - secretRef:
+                name: versioning-secret
+
           resources:
             requests:
               cpu: {{ .Values.versioning.resources.requests.cpu }}
@@ -25,10 +33,12 @@ spec:
             limits:
               cpu: {{ .Values.versioning.resources.limits.cpu }}
               memory: {{ .Values.versioning.resources.limits.memory }}
+
           livenessProbe:
             httpGet:
               path: /health
               port: {{ .Values.versioning.port }}
+
           readinessProbe:
             httpGet:
               path: /ready

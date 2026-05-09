@@ -19,6 +19,13 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.tagging.port }}
+
+          envFrom:
+            - configMapRef:
+                name: tagging-config
+            - secretRef:
+                name: tagging-secret
+
           resources:
             requests:
               cpu: {{ .Values.tagging.resources.requests.cpu }}
@@ -26,12 +33,14 @@ spec:
             limits:
               cpu: {{ .Values.tagging.resources.limits.cpu }}
               memory: {{ .Values.tagging.resources.limits.memory }}
+
           livenessProbe:
             httpGet:
               path: /health
               port: {{ .Values.tagging.port }}
             initialDelaySeconds: 15
             periodSeconds: 10
+
           readinessProbe:
             httpGet:
               path: /ready
